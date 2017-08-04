@@ -15,21 +15,30 @@
     	</style>
     
 	</head>
-		<script>
-		function useradd(){
-			if(myform.name.value.length < 1){
-				alert("이름을 입력해주세요.");
-				return;
+		<script language="javascript">
+			function infoConfirm(){
+				if(myform.employee_num.value.length === 0){
+					alert("사원번호는 필수 사항입니다.");
+					myform.employee_num.focus();
+					return;
+				}
+				
+				if(myform.employee_num.value.length != 8){
+					alert("사원번호는 8자리이어야 합니다.");
+					myfrom.employee_num.focus();
+					return;
+				}
+				
+				if(myform.name.value.length === 0){
+					alert("이름은 필수 사항입니다.");
+					myform.name.focus();
+					return;
+				}
+				myform.submit();
 			}
-			if(myform.postcode_address2.value.length < 1){
-				alert("상세주소를 입력해주세요.");
-				return;
-			}
-			myform.submit();
-		}
-	</script>
+		</script>
 	<body>
-		
+	    	
 		<div class="container">			
 						
 			<div class="col-sm-6 col-sm-offset-3">
@@ -39,7 +48,7 @@
 			    <form action="/process/useradd" method="post" id="myform">
 			    	<div class="from-group">
 			    		<label>사원번호</label>
-			    		<input type="text" id="employee_num" class="form-control" name="employee_num" placeholder="사원번호" maxlength="16"><br>
+			    		<input type="text" id="employee_num" class="form-control" name="employee_num" placeholder="사원번호" maxlength="8"><br>
 			    	</div>
 			        <div class="form-group">
 			            <label>이름</label>
@@ -71,7 +80,7 @@
 			        </div>
 			        <div class="form-group">
 			        	<label>생일</label>
-			        	<input type="date" class="form-control" name="Date_of_birth">
+			        	<input type="date" class="form-control" name="Date_of_birth" maxlength="10">
 			        </div>
 			        <div class="form-group">
 			        	<label>주소</label><br>
@@ -140,7 +149,8 @@
 			        	<input type="text" id="ecn_num2" name="Ecn_num2" maxlength="4" size="5"> - 
 			        	<input type="text" id="ecn_num3" name="Ecn_num3" maxlength="4" size="5">
 			        </div>
-			        <button class="btn btn-warning btn-lg" onclick="useradd()">사용자 등록</button>
+			        <button class="btn btn-warning btn-lg" onclick="infoConfirm();return false;">사용자 등록</button>
+			        
 			    </form>
 			
 			    <hr>

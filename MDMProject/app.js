@@ -1,10 +1,11 @@
-
 //===== 모듈 불러들이기 =====//
 const express = require('express')
   , http = require('http')
   , path = require('path')
-  , logger = require('morgan');
-
+  , logger = require('morgan')
+  , cluster = require('cluster')
+  , numCPUs = require('os').cpus().length;
+cluster.schedulingPolicy = cluster.SCHED_RR;
 
 const config = require('./config/config');
 const database = require('./model/databases');
@@ -21,7 +22,6 @@ const flash = require('connect-flash');
 
 //===== Express 서버 객체 만들기 =====//
 const app = express();
-
 
 //===== 뷰 엔진 설정 =====//
 app.set('views', __dirname + '/views');
@@ -122,14 +122,30 @@ var httpsConfig = {
     passphrase: publicCertPassword
 };
 
-//시작된 서버 객체를 리턴받도록 합니다. 
-var server = http.createServer(app).listen(app.get('port'), function(){
-	console.log('서버가 시작되었습니다. 포트 : ' + app.get('port'));
-	// 데이터베이스 초기화
-	database.init(app);
-});
+if(cluster.isMaster){
+	console.log(`Master ${process.pid} is running`);
+	
+	// Fork workers.
+	for (let i=0; i < numCPUs; i++){
+		cluster.fork();
+	}
+	
+	cluster.on('exit', function(worker, code, signal){
+		console.log(`worker ${worker.process.pid} died`);
+		cluster.fork();
+	});
+	
+} else {
+	//시작된 서버 객체를 리턴받도록 합니다. 
+	var server = http.createServer(app).listen(app.get('port'), function(){
+		console.log('서버가 시작되었습니다. 포트 : ' + app.get('port'));
+		console.log(`worker ${process.pid}`);
+		// 데이터베이스 초기화
+		database.init(app);
+	});
 
-//https protocol
-var sslServer = https.createServer(httpsConfig, app).listen(app.get('https'), function(){
-	debug('Express SSL server listening on port ' + sslServer.address().port);
-});
+	//https protocol
+	var sslServer = https.createServer(httpsConfig, app).listen(app.get('https'), function(){
+		debug('Express SSL server listening on port ' + sslServer.address().port);
+	});
+}

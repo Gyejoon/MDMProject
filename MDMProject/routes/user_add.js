@@ -14,43 +14,38 @@ var user_add = function(req, res){
 	var paramecnnum2 = req.body.Ecn_num2;
 	var paramecnnum3 = req.body.Ecn_num3;
 	
+	var address = parampostcode + "," + paramaddress1 + " " + paramaddress2;
+	var ecnnum = paramecnnum1 + "-" + paramecnnum2 + "-" + paramecnnum3;
+	
 	if(database){
-		var query = "call user_add";
-		query = query.concat("('" + paramemployee_num + "',");
-		query = query.concat("'" + paramname + "',"); query = query.concat("'" + paramrank + "',");
-		query = query.concat("'" + paramdepartment + "',"); query = query.concat("'" + paramdateofbirth + "',");
-		var address = parampostcode + "," + paramaddress1 + " " + paramaddress2;
-		var ecnnum = paramecnnum1 + "-" + paramecnnum2 + "-" + paramecnnum3;
-		query = query.concat("'" + address + "',"); query = query.concat("'" + ecnnum + "');");
-			
-		database.getConnection(function(err, connection) {
-			connection.beginTransaction(function(err){
+		var fail;
+		
+		database.getConnection(function(err, connection){
+			if(err){
+				throw err;
+			}
+			connection.query("select * from user_info where employee_num = ?;", [
+				paramemployee_num
+			], function(err, result){
 				if(err){
-					throw err;
+					console.log(err);
+					return;
 				}
-				connection.query(query, function(err){
-							if(err){
-								console.log(err);
-								console.log(query);
-								connection.rollback(function(){ // insert 실패시 insert 하지않고 rollback한다.
-									console.log('rollback error');
-									throw err;
-								});
-							}
-							connection.commit(function(err){
-								if(err){
-									console.log(err);
-									connection.rollback(function(){
-										if(err){
-											console.log(err);
-											throw err;
-										}
-									});
-								}
-								res.redirect('/');
-							});
-						});
+				fail = "join fail";
 			});
+			
+			if(!fail){
+				connection.query("call user_add(?,?,?,?,?,?,?)",[
+					paramemployee_num, paramname, paramrank, paramdepartment,
+					paramdateofbirth, address, ecnnum
+				], function(err){
+					if(err){
+						console.log(err);
+						return;
+					}
+				});
+				res.redirect("/");
+			}
 		});
 	} else {
 		console.log("db 연결실패");

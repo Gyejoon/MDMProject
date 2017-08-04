@@ -38,7 +38,6 @@ function initRoutes(app) {
 				
 		console.log('라우팅 모듈 [%s]이(가) 설정됨.', curItem.method);
 	}
-
 }
 
 module.exports = route_loader;
