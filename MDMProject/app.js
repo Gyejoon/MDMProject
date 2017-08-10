@@ -4,7 +4,8 @@ const express = require('express')
   , path = require('path')
   , logger = require('morgan')
   , cluster = require('cluster')
-  , numCPUs = require('os').cpus().length;
+  , numCPUs = require('os').cpus().length
+  , date = require('date-utils');
 cluster.schedulingPolicy = cluster.SCHED_RR;
 
 const config = require('./config/config');
@@ -130,22 +131,27 @@ if(cluster.isMaster){
 		cluster.fork();
 	}
 	
+	// 디바이스 정보 초기화
+	database.initialize(app);
+	
 	cluster.on('exit', function(worker, code, signal){
-		console.log(`worker ${worker.process.pid} died`);
+		console.log(`worker ${worker.process.pid} died` + ", " + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 		cluster.fork();
 	});
 	
 } else {
 	//시작된 서버 객체를 리턴받도록 합니다. 
 	var server = http.createServer(app).listen(app.get('port'), function(){
-		console.log('서버가 시작되었습니다. 포트 : ' + app.get('port'));
+		console.log('서버가 시작되었습니다. 포트 : ' + app.get('port') + ", " + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 		console.log(`worker ${process.pid}`);
+		
 		// 데이터베이스 초기화
+		// 커넥션 express에 등록
 		database.init(app);
 	});
 
 	//https protocol
 	var sslServer = https.createServer(httpsConfig, app).listen(app.get('https'), function(){
-		debug('Express SSL server listening on port ' + sslServer.address().port);
+		console.log('Express SSL server listening on port ' + app.get('https') + ", " + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	});
 }

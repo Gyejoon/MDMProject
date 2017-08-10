@@ -1,5 +1,5 @@
 var user_add = function(req, res){
-	console.log('useradd 모듈 호출됨.');
+	console.log('useradd 모듈 호출됨.'+ new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
 	var database = req.app.get('databases');
 	var paramemployee_num = req.body.employee_num;

@@ -1,21 +1,20 @@
 var device_add = function(req, res){
-	console.log('device 모듈 안에 있는 adddevice 호출됨.');
+	console.log('deviceadd 호출됨.'+ new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
 	var database = req.app.get('databases');
 	var paramId = req.body.Id;
 	var paramUser_info_employee_num = req.body.User_info_employee_num;
 	var paramFcm_token = req.body.Fcm_token;
 	var paramPassword = req.body.Password;
-	var paramMacAddress = req.body.Macaddress;
 	var paramOs = req.body.Os;
 	var paramManufactuer = req.body.Manufacturer;
 	var paramTelnum = req.body.Telnum;
 	
 	if(database){
 		database.getConnection(function(err, connection) {
-			connection.query("call device_add(?,?,?,?,?,?,?,?)",[
+			connection.query("call device_add(?,?,?,?,?,?,?)",[
 				paramId, paramUser_info_employee_num, paramFcm_token,
-				paramPassword, paramMacAddress, paramOs, paramManufactuer,paramTelnum
+				paramPassword, paramOs, paramManufactuer,paramTelnum
 			],function(err){
 				if(err){
 					res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});

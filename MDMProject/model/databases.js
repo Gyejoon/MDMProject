@@ -11,37 +11,34 @@ var connection = mysql.createPool({
 function init(app){
 	console.log('mysql 초기화 시작');
 	
-	connection.getConnection(function(err, connections) {
-		connections.beginTransaction(function(err){
+	app.set('databases', connection);
+}
+
+function initialize(app){
+	connection.getConnection(function(err, connections){
+		if(err) {
+			throw err;
+		}
+		// 모든 디바이스의 Id 값 추출
+		connections.query("select Id from device_info;", function(err, result){
 			if(err){
 				throw err;
 			}
-			connections.query("update device_info set Active='off'", function(err){
-						if(err){
-							console.log(err);
-							console.log(query);
-							connections.rollback(function(){ // insert 실패시 insert 하지않고 rollback한다.
-								console.log('rollback error');
-								throw err;
-							});
-						}
-						connections.commit(function(err){
-							if(err){
-								console.log(err);
-								connections.rollback(function(err){
-									if(err){
-										console.log(err);
-										throw err;
-									}
-								});
-							}
-						});
-					});
+			// 서버 재부팅을 했을 시에 모든 디바이스는 퇴근상태가 된다.
+			// 반복으로 쿼리문을 보내서 기록을 저장한다.
+			for(var i=0; i<result.length;i++){
+				connections.query("call device_history(?,?,?);", [
+					result[i].Id, "퇴근", "서버 재부팅으로 인한 퇴근처리"
+				], function(err){
+					if(err){
+						throw err;
+					}
+				});
+			}
 		});
 	});
-	
-	app.set('databases', connection);
 }
 
 
 module.exports.init = init;
+module.exports.initialize = initialize;

@@ -5,8 +5,10 @@ module.exports = {
 		{file : './user_add', path : '/process/useradd', method: 'user_add', type: 'post'},
 		{file : './device_add', path : '/process/deviceadd', method: 'device_add', type: 'post'},
 		{file : './device_push', path : '/process/devicepush', method: 'device_push', type: 'post'},
-		{file : './application_add', path : '/process/applicationadd', method: 'application_add', type: 'post'},
-		//{file : './modulation_detection', path : '/process/modulation', method: 'moduleation_detection', type: 'post'},
+		{file : './device_push', path : '/process/devicepushone', method: 'device_push_one', type: 'post'},
+		{file : './device_on', path : '/process/deviceon', method: 'device_on', type: 'post'},
+		{file : './device_off', path : '/process/deviceoff', method: 'device_off', type: 'post'},
+		{file : './location_add', path : '/process/locationadd', method: 'location_add', type: 'post'},
 	],
 	fcm_api_key: 'AAAAEQgOYvo:APA91bHnmHGRlHrcxGkHi1hg2Ao2L9MBYxQt1jiK4TjVeWUf_o-lxexE1LZ1iS2XoKeqCpIszjIX16UaX6L3i3-zVsTmMINnp2loWb1O6wYN1ESaAgNi80o1Mwt-Fw8TfxUnbO-k6L7R'
 };
