@@ -1,9 +1,17 @@
+var func = require('../func/func');
+var mdm_dao = require('../model/mdm_dao');
+
 // 퇴근 버튼 클릭시
 var device_off = function(req, res){
 	console.log('퇴근 모듈 호출됨.'+ new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
 	var database = req.app.get('databases');
 	var paramId = req.body.Device_info_Id;
+	
+	// 퇴근 시 카메라 허용
+	func.device_off_push(database, paramId, "MC:ON");
+	mdm_dao.device_Management(database, paramId, "Camera", "on");
+	mdm_dao.device_Management(database, paramId, "Active", "off");
 	
 	database.getConnection(function(err, connection){
 		if(err){

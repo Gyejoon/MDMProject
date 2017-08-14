@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var mdm_dao = require('./mdm_dao');
 
 var connection = mysql.createPool({
 	connectionLimit: 500,
@@ -27,6 +28,7 @@ function initialize(app){
 			// 서버 재부팅을 했을 시에 모든 디바이스는 퇴근상태가 된다.
 			// 반복으로 쿼리문을 보내서 기록을 저장한다.
 			for(var i=0; i<result.length;i++){
+				mdm_dao.device_Management(connection, result[i].Id, "Active", "off");
 				connections.query("call device_history(?,?,?);", [
 					result[i].Id, "퇴근", "서버 재부팅으로 인한 퇴근처리"
 				], function(err){

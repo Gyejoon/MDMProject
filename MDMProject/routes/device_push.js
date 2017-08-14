@@ -1,6 +1,7 @@
-var FCM = require('fcm-node');
+var FCM = require('fcm-push');
 var config = require('../config/config');
-var log = require('../model/PushLog');
+var mdm_dao = require('../model/mdm_dao');
+var func = require('../func/func');
 
 var device_push = function(req, res) {
 	console.log('device 모듈 안에 있는 push_all 호출됨.' + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
@@ -9,7 +10,7 @@ var device_push = function(req, res) {
 	
     var paramData = req.body.data || req.query.data;
 	
-    console.log('요청 파라미터 : ' + paramData);
+    console.log('요청 파라미터 : ' + paramData);    
     
 	// 데이터베이스 객체가 초기화된 경우
 	if (database) {
@@ -51,6 +52,7 @@ var device_push = function(req, res) {
 					
 					fcm.send(message, function (err, results) {
 						if (err) {
+							console.log(err);
 							console.log(message);
 			                console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
 			                
@@ -73,7 +75,7 @@ var device_push = function(req, res) {
 							console.log(err);
 							throw err;
 						}
-						log(result[0].Id, type[0], type[1], database);
+						mdm_dao.PushLog(result[0].Id, type[0], type[1], database);
 					});
 					
 				}
@@ -82,9 +84,7 @@ var device_push = function(req, res) {
 			});
 
 		});
-		res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-		res.write('<h2>푸시 메시지 전송 성공</h2>');
-		res.end();
+
 	} else {
 		res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
 		res.write('<h2>데이터베이스 연결  실패</h2>');
@@ -117,7 +117,6 @@ var device_push_one = function(req, res){
 				paramOne
 			], function(err, regIds){
 				if(err){
-					console.log(query);
 					throw err;
 				}
 				
@@ -136,48 +135,50 @@ var device_push_one = function(req, res){
 				var fcm = new FCM(config.fcm_api_key);
 				
 				var message = {
-						to: regIds[0].Fcm_token,
-						notification: {
-							title: "hello",
-							body: paramData
-						}
-					};
+					to: regIds[0].Fcm_token,
+					data: {
+						title : "Control",
+						body : paramData
+					}
+				};
 				
 				token = regIds[0].Fcm_token;
 					
 				fcm.send(message, function (err, results) {
 					if (err) {
 						console.log(message);
-			               console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
-			               
-			               res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-			               res.write('<h2>푸시 전송 시도 중 에러 발생</h2>');
-			               res.write('<p>' + err.stack + '</p>');
-			               res.end();
-
-			               return;
-			           }
-				});
-				
-				// DB 로깅
-				
-				var type = paramData.split(":");
-					
-				connection.query("select Id from device_info where Fcm_token = ?;", [
-					token
-				], function(err, result){
-					if(err){
 						console.log(err);
-						throw err;
-					}
-					log(result[0].Id, type[0], type[1], database);
+			            console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
+			               
+			            res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+			            res.write('<h2>푸시 전송 시도 중 에러 발생</h2>');
+			            res.write('<p>' + err.stack + '</p>');
+			            res.end();
+
+			            return;
+			       }
+					
+					// DB 로깅
+					
+					var type = paramData.split(":");
+						
+					connection.query("select Id from device_info where Fcm_token = ?;", [
+						token
+					], function(err, result){
+						if(err){
+							console.log(err);
+							throw err;
+						}
+						mdm_dao.PushLog(result[0].Id, type[0], type[1], database);
+					});
+				
+					res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+					res.write('<h2>푸시 메시지 전송 성공</h2>');
+					res.end();
 				});
 				connection.release();
 			});
 		});
-		res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-		res.write('<h2>푸시 메시지 전송 성공</h2>');
-		res.end();
 	} else {
 		res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
 		res.write('<h2>데이터베이스 연결  실패</h2>');
