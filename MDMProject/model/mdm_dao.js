@@ -116,8 +116,8 @@ mdm_dao.device_Management = function(database, Id, col, his){
 		if(err){
 			throw err;
 		}
-		connection.query("update device_mangement set ?=? where Device_info_Id = ?",[
-			col, his, Id
+		connection.query("update device_mangement set " + col + "=? where Device_info_Id = ?",[
+			his, Id
 		],function(err){
 			if(err){
 				throw err;

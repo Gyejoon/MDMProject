@@ -1,4 +1,4 @@
-var location_add = function(req, res){
+var device_location = function(req, res){
 	console.log('위치정보 추가 모듈 호출됨.' + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
 	var database = req.app.get('databases');
@@ -29,4 +29,4 @@ var location_add = function(req, res){
 	
 };
 
-module.exports.location_add = location_add;
+module.exports.device_location = device_location;
