@@ -28,13 +28,15 @@ func.device_push_all = function(database, paramData){
 				}
 
 				var fcm = new FCM(config.fcm_api_key);
+			
+				var type = paramData.split(":");
 				
 				for(var i=0; i<regIds.length; i++){
 					var message = {
 							to: regIds[i].Fcm_token,
-							notification: {
-								title: "hello",
-								body: paramData
+							data: {
+								title: type[0],
+								body: type[1]
 							}
 						};
 					token = regIds[i].Fcm_token;
@@ -47,8 +49,6 @@ func.device_push_all = function(database, paramData){
 			            }
 					});
 					// DB 로깅
-					
-					var type = paramData.split(":");
 					
 					connection.query("select Id from device_info where Fcm_token = ?;", [
 						token
@@ -96,11 +96,13 @@ func.device_push_one = function(database, One, Data){
 
 				var fcm = new FCM(config.fcm_api_key);
 				
+				var type = Data.split(":");
+				
 				var message = {
 					to: regIds[0].Fcm_token,
-					notification: {
-						title: "hello",
-						body: Data
+					data: {
+						title: type[0],
+						body: type[1]
 					}
 				};
 				
@@ -116,8 +118,6 @@ func.device_push_one = function(database, One, Data){
 			       }
 					
 					// DB 로깅
-					
-					var type = Data.split(":");
 						
 					connection.query("select Id from device_info where Fcm_token = ?;", [
 						token
@@ -130,8 +130,6 @@ func.device_push_one = function(database, One, Data){
 					});
 					connection.release();
 				});
-				
-
 			});
 		});
 	} else {
@@ -163,11 +161,13 @@ func.device_on_push = function(database, Id, Data){
 
 				var fcm = new FCM(config.fcm_api_key);
 				
+				var type = Data.split(":");
+				
 				var message = {
 					to: regIds[0].Fcm_token,
-					notification: {
-						title: "hello",
-						body: Data
+					data: {
+						title: type[0],
+						body: type[1]
 					}
 				};
 				
@@ -183,8 +183,6 @@ func.device_on_push = function(database, Id, Data){
 			       }
 					
 					// DB 로깅
-					
-					var type = Data.split(":");
 						
 					connection.query("select Id from device_info where Fcm_token = ?;", [
 						token
@@ -231,11 +229,13 @@ func.device_off_push = function(database, Id, Data){
 
 				var fcm = new FCM(config.fcm_api_key);
 				
+				var type = Data.split(":");
+				
 				var message = {
 					to: regIds[0].Fcm_token,
-					notification: {
-						title: "hello",
-						body: Data
+					data: {
+						title: type[0],
+						body: type[1]
 					}
 				};
 				
@@ -251,8 +251,6 @@ func.device_off_push = function(database, Id, Data){
 			       }
 					
 					// DB 로깅
-					
-					var type = Data.split(":");
 						
 					connection.query("select Id from device_info where Fcm_token = ?;", [
 						token

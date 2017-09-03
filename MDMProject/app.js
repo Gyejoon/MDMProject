@@ -5,7 +5,8 @@ const express = require('express')
   , logger = require('morgan')
   , cluster = require('cluster')
   , numCPUs = require('os').cpus().length
-  , date = require('date-utils');
+  , date = require('date-utils')
+  , net = require('net');
 cluster.schedulingPolicy = cluster.SCHED_RR;
 
 const config = require('./config/config');
@@ -68,9 +69,8 @@ app.use(flash());
 //===== 라우터 미들웨어 사용 =====//
 app.use(app.router);
 
-//라우팅 정보를 읽어들여 라우팅 설정
+// 라우팅 정보를 읽어들여 라우팅 설정
 route_loader.init(app);
-
 
 // url rotuing 함수
 var urlroute = require('./routes/urlroute');

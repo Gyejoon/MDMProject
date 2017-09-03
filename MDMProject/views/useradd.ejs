@@ -15,28 +15,6 @@
     	</style>
     
 	</head>
-		<script language="javascript">
-			function infoConfirm(){
-				if(myform.employee_num.value.length === 0){
-					alert("사원번호는 필수 사항입니다.");
-					myform.employee_num.focus();
-					return;
-				}
-				
-				if(myform.employee_num.value.length != 8){
-					alert("사원번호는 8자리이어야 합니다.");
-					myfrom.employee_num.focus();
-					return;
-				}
-				
-				if(myform.name.value.length === 0){
-					alert("이름은 필수 사항입니다.");
-					myform.name.focus();
-					return;
-				}
-				myform.submit();
-			}
-		</script>
 	<body>
 	    	
 		<div class="container">			
@@ -48,11 +26,11 @@
 			    <form action="/process/useradd" method="post" id="myform">
 			    	<div class="from-group">
 			    		<label>사원번호</label>
-			    		<input type="text" id="employee_num" class="form-control" name="employee_num" placeholder="사원번호" maxlength="8"><br>
+			    		<input type="text" id="employee_num" class="form-control" name="employee_num" placeholder="사원번호" maxlength="8" required><br>
 			    	</div>
 			        <div class="form-group">
 			            <label>이름</label>
-			            <input type="text" id="name" class="form-control" name="Name" placeholder="이름" maxlength="8">
+			            <input type="text" id="name" class="form-control" name="Name" placeholder="이름" maxlength="8" required>
 			        </div>
 			        <div class="form-group">
 			            <label>직급</label>
@@ -80,14 +58,14 @@
 			        </div>
 			        <div class="form-group">
 			        	<label>생일</label>
-			        	<input type="date" class="form-control" name="Date_of_birth" maxlength="10">
+			        	<input type="date" class="form-control" name="Date_of_birth" maxlength="10" required>
 			        </div>
 			        <div class="form-group">
 			        	<label>주소</label><br>
-			        	<input type="text" id="postcode" name="postcode" placeholder="우편번호">
+			        	<input type="text" id="postcode" name="postcode" placeholder="우편번호" required>
 			        	<input type="button" onclick="DaumPostCode()" class="btn-warning" value="우편번호 찾기"> <br><br>
 			        	<input type="text" id="postcode_address" name="address1" placeholder="주소" size="41">
-						<input type="text" id="postcode_address2" name="address2" placeholder="상세주소" size="25" maxlength="10">
+						<input type="text" id="postcode_address2" name="address2" placeholder="상세주소" size="25" maxlength="10" required>
 			        	
 			        	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 			        	<script>
@@ -145,11 +123,12 @@
 			            <option>055
 			            <option>064
 			            <option>070
+			            <option>010
 			            </select> - 
-			        	<input type="text" id="ecn_num2" name="Ecn_num2" maxlength="4" size="5"> - 
-			        	<input type="text" id="ecn_num3" name="Ecn_num3" maxlength="4" size="5">
+			        	<input type="text" id="ecn_num2" name="Ecn_num2" maxlength="4" size="5" required> - 
+			        	<input type="text" id="ecn_num3" name="Ecn_num3" maxlength="4" size="5" required>
 			        </div>
-			        <button class="btn btn-warning btn-lg" onclick="infoConfirm();return false;">사용자 등록</button>
+			        <button class="btn btn-warning btn-lg" onclick="submit">사용자 등록</button>
 			        
 			    </form>
 			

@@ -1,14 +1,49 @@
-
+var async = require('async');
 var mdm_dao = {};
 
-mdm_dao.app_insert = function(connection, Id, name, packagename, size, version, signature){
-	connection.query("call application_add(?,?,?,?,?,?);",[
-		Id, name, packagename, size, version, signature
-	],function(err){
-		if(err){
-			throw err;
-		}
-	});
+mdm_dao.app_insert = function(connection, Id, name, packagename, size, version, signature, callback){
+		connection.query("call application_add(?,?,?,?,?,?);",[
+			Id, name, packagename, size, version, signature
+		],function(err){
+			if(err){
+				return callback(err);
+			}
+		});
+};
+
+mdm_dao.app_search = function(connection, Id, packagename, callback){
+			connection.query("select name from application_info where Device_info_Id = ?" +
+					"and packagename = ?;",[
+						Id, packagename
+				], function(err, result){
+					if(err){
+						return callback(err);
+					}
+					callback(null, result);
+			});
+};
+
+mdm_dao.app_modulation = function(connection, Id, names, packagenames, signature){
+	return function(callback){
+		connection.query("select size from application_info where " +
+				"Device_info_Id = ? and signature = ?",[
+					Id, signature
+				], function(err, result){
+					if(err){
+						callback(err);
+					}
+					if(result[0] === undefined){ // 변조가 되었으면
+						var mod = {
+							name : names,
+							packagename : packagenames						
+						};
+						callback(null, mod);
+					}else { // 변조가 되지 않은 경우
+						callback(null, null); 
+					}
+					
+			});
+	};
 };
 
 mdm_dao.devicelog = function (database, Id, type, history){
@@ -116,7 +151,7 @@ mdm_dao.device_Management = function(database, Id, col, his){
 		if(err){
 			throw err;
 		}
-		connection.query("update device_mangement set " + col + "=? where Device_info_Id = ?",[
+		connection.query("update device_management set " + col + "=? where Device_info_Id = ?",[
 			his, Id
 		],function(err){
 			if(err){

@@ -29,13 +29,6 @@ function initialize(app){
 			// 반복으로 쿼리문을 보내서 기록을 저장한다.
 			for(var i=0; i<result.length;i++){
 				mdm_dao.device_Management(connection, result[i].Id, "Active", "off");
-				connections.query("call device_history(?,?,?);", [
-					result[i].Id, "퇴근", "서버 재부팅으로 인한 퇴근처리"
-				], function(err){
-					if(err){
-						throw err;
-					}
-				});
 			}
 		});
 	});
