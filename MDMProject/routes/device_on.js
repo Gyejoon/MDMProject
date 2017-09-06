@@ -23,7 +23,7 @@ var device_on = function(req, res){
 		mdm_dao.device_Management(database, paramId, "Camera", "off");
 		mdm_dao.device_Management(database, paramId, "Active", "on");
 		// 웹 서버에 접속 사실을 알린다.
-		mdm_web.deviceon();
+		mdm_web.deviceon(paramId);
 		// 디바이스의 출근 기록을 저장한다.
 		mdm_dao.devicelog(database, paramId, "출근", "사용자가 출근하였습니다.");
 		// 루팅 탐지 결과를 저장한다.

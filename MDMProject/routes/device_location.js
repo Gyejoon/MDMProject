@@ -1,3 +1,5 @@
+const mdm_web = require('../func/mdm_web');
+
 var device_location = function(req, res){
 	console.log('위치정보 추가 모듈 호출됨.' + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
@@ -5,6 +7,9 @@ var device_location = function(req, res){
 	var paramId = req.body.Device_info_Id;
 	var paramLatitude = req.body.Latitude;
 	var paramLongitude = req.body.Longitude;
+	
+	// 웹 서버에 위치정보를 보낸다.
+	mdm_web.deviceloc(paramId, paramLatitude, paramLongitude);
 	
 	if(database){
 		database.getConnection(function(err, connection){

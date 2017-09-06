@@ -73,7 +73,7 @@ app.use(app.router);
 route_loader.init(app);
 
 // url rotuing 함수
-var urlroute = require('./routes/urlroute');
+const urlroute = require('./routes/urlroute');
 urlroute(app);
 
 //===== 404 에러 페이지 처리 =====//

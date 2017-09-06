@@ -10,7 +10,19 @@ const option = {
 	}
 };
 
-mdm_web.deviceon = function(){
+mdm_web.deviceon = function(Id){
+	request(option, function(err, res, body){
+		
+	});
+};
+
+mdm_web.deviceoff = function(Id){
+	request(option, function(err, res, body){
+		
+	});
+};
+
+mdm_web.deviceloc = function(Id, Latitude, Longitude){
 	request(option, function(err, res, body){
 		
 	});

@@ -30,6 +30,7 @@ function initialize(app){
 			for(var i=0; i<result.length;i++){
 				mdm_dao.device_Management(connection, result[i].Id, "Active", "off");
 			}
+			connections.release();
 		});
 	});
 }

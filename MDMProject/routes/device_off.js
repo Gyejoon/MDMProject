@@ -1,5 +1,6 @@
 var func = require('../func/func');
 var mdm_dao = require('../model/mdm_dao');
+var mdm_web = require('../func/mdm_web');
 
 // 퇴근 버튼 클릭시
 var device_off = function(req, res){
@@ -12,6 +13,8 @@ var device_off = function(req, res){
 	func.device_off_push(database, paramId, "MC:ON");
 	mdm_dao.device_Management(database, paramId, "Camera", "on");
 	mdm_dao.device_Management(database, paramId, "Active", "off");
+	// 웹 서버에 접속해제 사실을 알린다.
+	mdm_web.deviceoff(paramId);
 	
 	database.getConnection(function(err, connection){
 		if(err){
