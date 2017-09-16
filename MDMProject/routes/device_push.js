@@ -1,7 +1,4 @@
-var FCM = require('fcm-push');
-var config = require('../config/config');
-var mdm_dao = require('../model/mdm_dao');
-var func = require('../func/func');
+var push = require('../push/func_push');
 
 var device_push = function(req, res) {
 	console.log('device 모듈 안에 있는 push_all 호출됨.' + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
@@ -14,8 +11,6 @@ var device_push = function(req, res) {
     console.log('요청 파라미터 : ' + paramData);
     
     func.device_push_one(database, req.query.emp, paramData);
-    
-    //func.device_push_all(database, paramData);
     
     var success = {
     	check : "true"

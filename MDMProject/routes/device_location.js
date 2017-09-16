@@ -1,36 +1,25 @@
-const mdm_web = require('../func/mdm_web');
+const device_dao = require('../model/device_dao');
 
 var device_location = function(req, res){
 	console.log('위치정보 추가 모듈 호출됨.' + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
-	var database = req.app.get('databases');
-	var paramId = req.body.Device_info_Id;
-	var paramLatitude = req.body.Latitude;
-	var paramLongitude = req.body.Longitude;
+	const database = req.app.get('database');
+	const paramId = req.body.Device_info_Id;
+	const paramLatitude = req.body.Latitude;
+	const paramLongitude = req.body.Longitude;
 	
-	// 웹 서버에 위치정보를 보낸다.
-	mdm_web.deviceloc(paramId, paramLatitude, paramLongitude);
-	
-	if(database){
-		database.getConnection(function(err, connection){
-			connection.query("call location_history(?,?,?);", [
-				paramId, paramLatitude, paramLongitude
-			], function(err){
-				if(err){
-					res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});
-					res.write("{code : '400', 'message' : '위치 정보 추가 실패'}");
-					res.end();
-					console.log(err);
-					throw err;
-				}
-				res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});
-				res.write("{code : '200', 'message' : '위치 정보 추가 성공'}");
-				res.end();
-			});
+	database.getConnection(function(err, connection){
+		device_dao.locationadd(connection, paramId, paramLatitude, paramLongitude, function(err, result){
+			if(err){
+				connection.release();
+				throw err;
+			}
+			res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});
+			res.write(JSON.stringify("{code : '200', 'message' : '위치 정보 추가 성공'}"));
+			res.end();
+			connection.release();
 		});
-	} else {
-		console.log("데이터베이스 연결 실패");
-	}
+	});
 	
 };
 
