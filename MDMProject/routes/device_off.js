@@ -22,18 +22,18 @@ var device_off = function(req, res){
 			if(result.Active === "on"){
 				func_push.device_on_push(database, paramId, "MC:ON");
 				func_push.device_on_push(database, paramId, "MR:ON");
-			}
-		});
-		
-		// 현황 갱신
-		device_dao.device_Management(connection, paramId, "Active", "off");
-		device_dao.device_Management(connection, paramId, "VoiceRecord", "on");
-		device_dao.device_Management(connection, paramId, "Camera", "on");
-		
-		device_dao.setActive(connection, paramId, "퇴근", "사용자가 퇴근 하였습니다.", function(err) {
-			if(err){
-				connection.release();
-				throw err;
+				// 현황 갱신
+				device_dao.device_Management(connection, paramId, "Active", "off");
+				device_dao.device_Management(connection, paramId, "VoiceRecord", "on");
+				device_dao.device_Management(connection, paramId, "Camera", "on");
+				
+				device_dao.setActive(connection, paramId, "퇴근", "사용자가 퇴근 하였습니다.", function(err) {
+					if(err){
+						connection.release();
+						throw err;
+					}
+					connection.release();
+				});
 			}
 		});
 	});

@@ -85,21 +85,21 @@ device_dao.PushLog = function (connection, Id, type, history){
 	var query = "";
 	
 	switch(type){
-	case "CW":
-		query = "call control_history('" + Id + "', 'Wifi', '" + history +"')";
-		break;
-	case "CB":
-		query = "call control_history('" + Id + "', 'Bluetooth', '" + history +"')";
-		break;
-	case "CT":
-		query = "call control_history('" + Id + "', 'Tethering', '" + history +"')";
-		break;
-	case "MC":
-		query = "call control_history('" + Id + "', 'MC', '" + history +"')";
-		break;
-	case "MR":
-		query = "call control_history('" + Id + "', 'MR', '" + history +"')";
-		break;
+		case "CW":
+			query = "call control_history('" + Id + "', 'Wifi', '" + history +"')";
+			break;
+		case "CB":
+			query = "call control_history('" + Id + "', 'Bluetooth', '" + history +"')";
+			break;
+		case "CT":
+			query = "call control_history('" + Id + "', 'Tethering', '" + history +"')";
+			break;
+		case "MC":
+			query = "call control_history('" + Id + "', 'MC', '" + history +"')";
+			break;
+		case "MR":
+			query = "call control_history('" + Id + "', 'MR', '" + history +"')";
+			break;
 	}
 	connection.query(query, function(err){
 		if(err){
