@@ -151,6 +151,8 @@ func_push.device_on_push = function(database, Id, Data){
 				throw err;
 			}
 			
+			console.log(regIds[0].Fcm_token);
+			
 			console.log('전송 대상 단말 수 : ' + regIds.length);
 			if(regIds.length < 1){
 				console.log('푸시 전송 대상 없음 : ' + regIds.length);  

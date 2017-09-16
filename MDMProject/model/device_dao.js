@@ -13,7 +13,7 @@ device_dao.locationadd = function(connection, Id, Latitude, Longitude, callback)
 	});
 };
 
-device_dao.active = function(connection, Id, type, history, callback){
+device_dao.setActive = function(connection, Id, type, history, callback){
 	user_dao.getEmployeeNumber(connection, Id, function(err, result) {
 		if(err){
 			return callback(err);
@@ -60,7 +60,7 @@ device_dao.getFcmtoken_emp = function(connection, employee_num, callback){
 };
 
 device_dao.getFcmtoken_Id = function(connection, Id, callback){
-	connection.query("select Fcm_token from device_info where User_info_employee_num = ?",[
+	connection.query("select Fcm_token from device_info where Id = ?",[
 		Id
 	], function(err, regIds){
 		if(err){
@@ -70,9 +70,9 @@ device_dao.getFcmtoken_Id = function(connection, Id, callback){
 	});
 };
 
-device_dao.getManagement = function(connection, Id, col, callback){
-	connection.query("select ? from device_management where Device_info_Id = ?",[
-		col, Id
+device_dao.getActive = function(connection, Id, callback){
+	connection.query("select Active from device_management where Device_info_Id = ?",[
+		Id
 	],function(err, result){
 		if(err){
 			return callback(err);

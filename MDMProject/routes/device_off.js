@@ -14,23 +14,23 @@ var device_off = function(req, res){
 			connection.release();
 			throw err;
 		}
-		device_dao.getManagement(connection, paramId, "Active", function(err, result) {
+		device_dao.getActive(connection, paramId, function(err, result) {
 			if(err){
 				connection.release();
 				throw err;
 			}
-			if(result.Active === "ON"){
+			if(result.Active === "on"){
 				func_push.device_on_push(database, paramId, "MC:ON");
 				func_push.device_on_push(database, paramId, "MR:ON");
 			}
 		});
 		
 		// 현황 갱신
-		device_dao.device_Management(connection, paramId, "Active", "OFF");
-		device_dao.device_Management(connection, paramId, "VoiceRecord", "ON");
-		device_dao.device_Management(connection, paramId, "Camera", "ON");
+		device_dao.device_Management(connection, paramId, "Active", "off");
+		device_dao.device_Management(connection, paramId, "VoiceRecord", "on");
+		device_dao.device_Management(connection, paramId, "Camera", "on");
 		
-		device_dao.active(connection, paramId, "퇴근", "사용자가 퇴근 하였습니다.", function(err) {
+		device_dao.setActive(connection, paramId, "퇴근", "사용자가 퇴근 하였습니다.", function(err) {
 			if(err){
 				connection.release();
 				throw err;
