@@ -15,7 +15,8 @@ module.exports = {
 		{file : './device_on', path : '/process/deviceon', method: 'device_on', type: 'post'},
 		{file : './device_off', path : '/process/deviceoff', method: 'device_off', type: 'post'},
 		{file : './device_location', path : '/process/locationadd', method: 'device_location', type: 'post'},
-		{file : './app_manage', path : '/process/appmanage', method: 'app_manage', type: 'post'}
+		{file : './app_manage', path : '/process/appmanage', method: 'app_manage', type: 'post'},
+		{file : './app_update', path : '/process/appupdate', method: 'app_update', type: 'post'},
 	],
 	fcm_api_key: 'AAAAEQgOYvo:APA91bHnmHGRlHrcxGkHi1hg2Ao2L9MBYxQt1jiK4TjVeWUf_o-lxexE1LZ1iS2XoKeqCpIszjIX16UaX6L3i3-zVsTmMINnp2loWb1O6wYN1ESaAgNi80o1Mwt-Fw8TfxUnbO-k6L7R'
 };

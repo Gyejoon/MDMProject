@@ -1,4 +1,4 @@
-const device_dao = require('../model/device_dao');
+﻿const device_dao = require('../model/device_dao');
 const func_push = require('../push/func_push');
 
 // 퇴근 버튼 클릭시
@@ -20,11 +20,11 @@ var device_off = function(req, res){
 				throw err;
 			}
 			if(result.Active === "on"){
-				func_push.device_on_push(database, paramId, "MC:ON");
-				func_push.device_on_push(database, paramId, "MR:ON");
+				func_push.device_active_push(database, paramId, "MC:ON");
+//				func_push.device_active_push(database, paramId, "MR:ON");
 				// 현황 갱신
 				device_dao.device_Management(connection, paramId, "Active", "off");
-				device_dao.device_Management(connection, paramId, "VoiceRecord", "on");
+//				device_dao.device_Management(connection, paramId, "VoiceRecord", "on");
 				device_dao.device_Management(connection, paramId, "Camera", "on");
 				
 				device_dao.setActive(connection, paramId, "퇴근", "사용자가 퇴근 하였습니다.", function(err) {

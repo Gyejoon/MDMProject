@@ -1,4 +1,4 @@
-//===== 모듈 불러들이기 =====//
+﻿//===== 모듈 불러들이기 =====//
 const express = require('express')
   , http = require('http')
   , path = require('path')
@@ -36,16 +36,6 @@ app.use(app.router);
 
 // 라우팅 정보를 읽어들여 라우팅 설정
 route_loader.init(app);
-
-//===== 404 에러 페이지 처리 =====//
-const errorHandler = expressErrorHandler({
- static: {
-   '404': './public/404.html'
- }
-});
-
-app.use( expressErrorHandler.httpError(404) );
-app.use( errorHandler );
 
 //===== 서버 시작 =====//
 
