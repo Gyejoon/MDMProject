@@ -1,4 +1,6 @@
 const device_dao = require('../model/device_dao');
+const user_dao = require('../model/user_dao');
+const request_web = require('../web/request_web');
 
 var device_location = function(req, res){
 	console.log('위치정보 추가 모듈 호출됨.' + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
@@ -16,7 +18,16 @@ var device_location = function(req, res){
 			}
 			connection.release();
 		});
+		
+		user_dao.getEmployeeNumber(connection, paramId, function(err, result) {
+			if(err){
+				connection.release();
+				throw err;
+			}
+			request_web.deviceloc(result, paramLatitude, paramLongitude);
+		});
 	});
+	
 	
 	
 	res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});

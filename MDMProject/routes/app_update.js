@@ -46,11 +46,18 @@ var app_update = function(req, res){
 									throw err;
 								}
 							});
-							app_dao.app_history(connection, paramId, "추가", paramapp[x].name);
 						}else{ // 중복이면 갱신
-							app_dao.app_update(connection, paramId, paramapp[x].name, paramapp[x].packagename, 
-									paramapp[x].size, paramapp[x].version);
-							app_dao.app_history(connection, paramId, "갱신", paramapp[x].name);
+							app_dao.app_getUpdate(connection, paramId, paramapp[x].version, paramapp[x].size, function(err, result) {
+								if(err){
+									throw err;
+								}
+								if(result === undefined){ // 사이즈나 버전이 바뀐 경우 undefined 출력. 그런 경우에 갱신 로그 남김
+									app_dao.app_history(connection, paramId, "갱신", paramapp[x].name);
+									app_dao.app_update(connection, paramId, paramapp[x].name, paramapp[x].packagename, 
+											paramapp[x].size, paramapp[x].version);
+								}
+							});
+
 						}
 					});
 				})(i);

@@ -1,31 +1,44 @@
-const request = require('request');
-const mdm_web = {};
+var request = require('request');
+var request_web = {};
 
-const option = {
-	uri : 'http://192.168.0.31:8080/test/test',
+var option = {
+	uri : 'http://www.terrier.co19.kr/send/location',
 	method : 'POST',
-	form : {
-		name : "gg",
-		active : "on"
+	headers : {
+		'Content-Type' : 'application/json'
+	},
+	json : {
+		employee_num : "",
+		Latitude : "",
+		Longitude : ""
 	}
 };
 
-mdm_web.deviceon = function(Id){
+
+request_web.deviceon = function(Id){
+	request(option, function(err, res, body){
+		if (!err && res.statusCode === 200) {
+		    console.log("Success");
+		}
+	});
+};
+
+request_web.deviceoff = function(Id){
 	request(option, function(err, res, body){
 		
 	});
 };
 
-mdm_web.deviceoff = function(Id){
-	request(option, function(err, res, body){
-		
+request_web.deviceloc = function(emp, lat, long){
+	option.json.employee_num = emp;
+	option.json.Latitude = lat;
+	option.json.Longitude = long;
+	
+	request(option, function(err, res, body) {
+		if (!err && res.statusCode === 200) {
+		    console.log(res.body);
+		}
 	});
 };
 
-mdm_web.deviceloc = function(Id, Latitude, Longitude){
-	request(option, function(err, res, body){
-		
-	});
-};
-
-module.exports = mdm_web;
+module.exports = request_web;

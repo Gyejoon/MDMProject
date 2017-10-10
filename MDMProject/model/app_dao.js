@@ -7,6 +7,7 @@ app_dao.app_insert = function(connection, Id, name, packagename, size, version, 
 		if(err){
 			return callback(err);
 		}
+		app_dao.app_history(connection, Id, "추가", name);
 	});
 };
 
@@ -84,6 +85,18 @@ app_dao.app_getName = function(connection, Id, packagename, callback){
 			"and Device_info_Id = ?",[
 				packagename, Id
 			],function(err, result){
+		if(err){
+			return callback(err);
+		}
+		return callback(null, result[0]);
+	});
+};
+
+app_dao.app_getUpdate = function(connection, Id, version, size, callback){
+	connection.query("select name from application_info where Device_info_Id = ? " +
+			"and version = ? and size = ?",[
+				Id, version, size
+			], function(err, result){
 		if(err){
 			return callback(err);
 		}
