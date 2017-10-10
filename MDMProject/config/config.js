@@ -2,7 +2,7 @@ module.exports = {
 	server_port: 3000,
 	https_port: 3443,
 	mysql : {
-		connectionLimit: 500,
+		connectionLimit: 5000,
 		host: '58.141.234.126',
 		port: '55336',
 		user: 'root',
@@ -10,8 +10,8 @@ module.exports = {
 		password: 'kit2017'
 	},
 	route_info: [
-		//{file : './device_push', path : '/process/devicepush', method: 'device_push', type: 'get'},
-		//{file : './device_push_group', path : '/process/devicepushgroup', method: 'device_push_group', type: 'get'},
+		{file : './device_push', path : '/process/devicepush', method: 'device_push', type: 'get'},
+		{file : './device_push', path : '/process/devicepushgroup', method: 'device_push_group', type: 'get'},
 		{file : './device_on', path : '/process/deviceon', method: 'device_on', type: 'post'},
 		{file : './device_off', path : '/process/deviceoff', method: 'device_off', type: 'post'},
 		{file : './device_location', path : '/process/locationadd', method: 'device_location', type: 'post'},

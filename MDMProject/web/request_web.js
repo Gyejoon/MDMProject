@@ -14,6 +14,14 @@ var option = {
 	}
 };
 
+var option2 = {
+	uri : 'http://192.168.0.31:8080/mdmservice/controller_onoff',
+	method : 'POST',
+	form : {
+		body : ""
+	}
+};
+
 
 request_web.deviceon = function(Id){
 	request(option, function(err, res, body){
@@ -37,6 +45,19 @@ request_web.deviceloc = function(emp, lat, long){
 	request(option, function(err, res, body) {
 		if (!err && res.statusCode === 200) {
 		    console.log(res.body);
+		}
+	});
+};
+
+request_web.pushonoff = function(emp, type, history){
+	option2.form.body = emp + ":";
+	option2.form.body += type;
+	option2.form.body += ":";
+	option2.form.body += history;
+	
+	request(option2, function(err, res, body){
+		if(!err && res.statuscode === 200){
+			console.log(res.body);
 		}
 	});
 };

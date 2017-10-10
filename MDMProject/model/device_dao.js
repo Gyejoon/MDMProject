@@ -70,6 +70,18 @@ device_dao.getFcmtoken_Id = function(connection, Id, callback){
 	});
 };
 
+device_dao.getId_emp = function(connection, emp, callback){
+	connection.query("select Id from device_info where User_info_employee_num = ?",[
+		emp
+	], function(err, result){
+		if(err){
+			return callback(err);
+		}
+		return callback(null, result);
+	});
+};
+
+
 device_dao.getActive = function(connection, Id, callback){
 	connection.query("select Active from device_management where Device_info_Id = ?",[
 		Id
@@ -95,10 +107,10 @@ device_dao.PushLog = function (connection, Id, type, history){
 			query = "call control_history('" + Id + "', 'Tethering', '" + history +"')";
 			break;
 		case "MC":
-			query = "call control_history('" + Id + "', 'MC', '" + history +"')";
+			query = "call control_history('" + Id + "', 'Camera', '" + history +"')";
 			break;
 		case "MR":
-			query = "call control_history('" + Id + "', 'MR', '" + history +"')";
+			query = "call control_history('" + Id + "', 'VoiceRecord', '" + history +"')";
 			break;
 	}
 	connection.query(query, function(err){
@@ -108,5 +120,7 @@ device_dao.PushLog = function (connection, Id, type, history){
 		console.log(Id+"에 성공적으로 로깅되었습니다.");
 	});
 };
+
+
 
 module.exports = device_dao;

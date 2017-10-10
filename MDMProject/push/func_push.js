@@ -1,108 +1,82 @@
 var FCM = require('fcm-push');
 const config = require('../config/config');
 const device_dao = require('../model/device_dao');
+var request_web = require('../web/request_web');
+
 
 var func_push = {};
 
-// Id
-func_push.device_push = function(database, paramData){
+func_push.device_push = function(database, emp, paramData){
 	
-	if (database) {
-		// 1. 모든 단말 검색
-		var token = "";
-		
-		database.getConnection(function(err, connection){
+	database.getConnection(function(err, connection){
+		device_dao.getFcmtoken_emp(connection, emp, function(err, regIds) {
 			if(err){
-				connection.release();
 				throw err;
 			}
 			
-			device_dao.getFcmtoken(connection, employee_num, function(err) {
-				
-			})
-			
-			connection.query('select Fcm_token from device_info;', function(err, regIds){
-				if(err){
-					throw err;
-				}
-				
-				console.log('전송 대상 단말 수 : ' + regIds.length);
-				if(regIds.length < 1){
-					console.log('푸시 전송 대상 없음 : ' + regIds.length);
-					
-		            return;
-				}
+			console.log('전송 대상 단말 수 : ' + regIds.length);
+			if(regIds.length < 1){
+				console.log('푸시 전송 대상 없음 : ' + regIds.length);  
+	            throw err;
+			}
 
-				var fcm = new FCM(config.fcm_api_key);
+			var fcm = new FCM(config.fcm_api_key);
+					
+			var type = paramData.split(":");
 			
-				var type = paramData.split(":");
-				
-				for(var i=0; i<regIds.length; i++){
-					var message = {
-							to: regIds[i].Fcm_token,
-							data: {
-								title: type[0],
-								body: type[1]
-							}
-						};
-					token = regIds[i].Fcm_token;
-					
-					fcm.send(message, function (err, results) {
-						if (err) {
-							console.log(message);
-			                console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
-			                return;
-			            }
-					});
-					// DB 로깅
-					
-					connection.query("select Id from device_info where Fcm_token = ?;", [
-						token
-					], function(err, result){
-						if(err){
-							console.log(err);
-							throw err;
-						}
-						mdm_dao.PushLog(result[0].Id, type[0], type[1], database);
-					});
-					
+			var message = {
+				to: regIds[0].Fcm_token,
+				data: {
+					title: type[0],
+					body: type[1]
 				}
-				connection.release();
+			};
+					
+			var token = regIds[0].Fcm_token;
+						
+			fcm.send(message, function (err, results) {
+				if (err) {
+					connection.release();
+					console.log(message);
+					console.log(err);
+		            console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
+
+		            return;
+				}				
+				device_dao.getId_emp(connection, emp, function(err, resultId) {
+					if(err){
+						connection.release();
+						throw err;
+					}
+					management(type[0], function(resultType){
+						device_dao.PushLog(connection, resultId[0].Id, type[0], type[1]);
+						device_dao.device_Management(connection, resultId[0].Id, resultType, type[1].toLowerCase());
+						console.log("DB 현황 기록됨");
+					});
+				});
 				
 			});
-
 		});
-	} else {
-		console.log('데이터베이스 연결 실패');
-	}
+	});
 };
 
-func_push.device_push_group = function(database, One, Data){
-	// 데이터베이스 객체가 초기화된 경우
-	if (database) {
-		// 1. 모든 단말 검색
-		var token = "";
+func_push.device_push_group = function(connection, emp, Data){
+	
+	device_dao.getFcmtoken_emp(connection, emp, function(err, regIds) {
+		if(err){
+			throw err;
+		}
 		
-		database.getConnection(function(err, connection){
-			if(err){
-				throw err;
-			}
-			connection.query("select Fcm_token from device_info where User_info_employee_num = ?;",[
-				One
-			], function(err, regIds){
-				if(err){
-					throw err;
-				}
-				
-				console.log('전송 대상 단말 수 : ' + regIds.length);
-				if(regIds.length < 1){
-					console.log('푸시 전송 대상 없음 : ' + regIds.length);  
-		            return;
-				}
-
-				var fcm = new FCM(config.fcm_api_key);
-				
-				var type = Data.split(":");
+		if(regIds.length < 1){
+			console.log('푸시 전송 대상 없음 : ' + regIds.length);  
+            return;
+		}
+		
+		var fcm = new FCM(config.fcm_api_key);
+		
+		for(var i=0; i<Data.length; i++){
+			(function(x){
+				var type = Data[x].split(":");
 				
 				var message = {
 					to: regIds[0].Fcm_token,
@@ -112,35 +86,34 @@ func_push.device_push_group = function(database, One, Data){
 					}
 				};
 				
-				token = regIds[0].Fcm_token;
-					
+				var token = regIds[0].Fcm_token;
+				
 				fcm.send(message, function (err, results) {
-					if (err) {
-						console.log(message);
-						console.log(err);
-			            console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
-
-			            return;
-			       }
-					
-					// DB 로깅
-						
-					connection.query("select Id from device_info where Fcm_token = ?;", [
-						token
-					], function(err, result){
+//					if (err) {
+//						console.log(message);
+//						console.log(err);
+//			            console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
+//
+//			            return;
+//					}		
+					device_dao.getId_emp(connection, emp, function(err, resultId) {
 						if(err){
-							console.log(err);
 							throw err;
 						}
-						mdm_dao.PushLog(result[0].Id, type[0], type[1], database);
+						management(type[0], function(resultType){
+							device_dao.PushLog(connection, resultId[0].Id, type[0], type[1]);
+							device_dao.device_Management(connection, resultId[0].Id, resultType, type[1].toLowerCase());
+							request_web.pushonoff(emp, type[0], type[1]);
+						});
 					});
-					connection.release();
+					
 				});
-			});
-		});
-	} else {
-		console.log('DB 연결 실패');
-	}
+			})(i);
+
+		}
+		
+	});
+
 };
 
 func_push.device_active_push = function(database, Id, Data){
@@ -185,5 +158,30 @@ func_push.device_active_push = function(database, Id, Data){
 	});
 
 };
+
+function management(type, callback){
+
+	var query = "";
+	
+	switch(type){
+	case "CW":
+		query = 'Wifi';
+		break;
+	case "CB":
+		query = 'Bluetooth';
+		break;
+	case "CT":
+		query = 'Tethering';
+		break;
+	case "MC":
+		query = 'Camera';
+		break;
+	case "MR":
+		query = 'VoiceRecord';
+		break;
+	}
+	
+	return callback(query);
+}
 
 module.exports = func_push;
