@@ -112,6 +112,13 @@ device_dao.PushLog = function (connection, Id, type, history){
 		case "MR":
 			query = "call control_history('" + Id + "', 'VoiceRecord', '" + history +"')";
 			break;
+		case "Backup":
+			query = "call control_history('" + Id + "'," + type + ", '" + history +"');" +
+					"call device_history('" + Id + "'," + type + ",'" + history +"');";
+			break;
+		default:
+			query = "call control_history('" + Id + "'," + type + ", '" + history +"');";
+			break;
 	}
 	connection.query(query, function(err){
 		if(err){

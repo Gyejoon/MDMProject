@@ -68,7 +68,7 @@ func_push.device_push_group = function(connection, emp, Data){
 		}
 		
 		if(regIds.length < 1){
-			console.log('푸시 전송 대상 없음 : ' + regIds.length);  
+			console.log('푸시 전송 대상 없음 : ' + regIds.length); 
             return;
 		}
 		
@@ -89,13 +89,13 @@ func_push.device_push_group = function(connection, emp, Data){
 				var token = regIds[0].Fcm_token;
 				
 				fcm.send(message, function (err, results) {
-//					if (err) {
-//						console.log(message);
-//						console.log(err);
-//			            console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
-//
-//			            return;
-//					}		
+					if (err) {
+						console.log(message);
+						console.log(err);
+			            console.error('푸시 전송 시도 중 에러 발생 : ' + err.stack);
+
+			            return;
+					}
 					device_dao.getId_emp(connection, emp, function(err, resultId) {
 						if(err){
 							throw err;
@@ -109,7 +109,6 @@ func_push.device_push_group = function(connection, emp, Data){
 					
 				});
 			})(i);
-
 		}
 		
 	});
@@ -126,7 +125,7 @@ func_push.device_active_push = function(database, Id, Data){
 			
 			console.log('전송 대상 단말 수 : ' + regIds.length);
 			if(regIds.length < 1){
-				console.log('푸시 전송 대상 없음 : ' + regIds.length);  
+				console.log('푸시 전송 대상 없음 : ' + regIds.length);
 	            throw err;
 			}
 
@@ -164,21 +163,24 @@ function management(type, callback){
 	var query = "";
 	
 	switch(type){
-	case "CW":
-		query = 'Wifi';
-		break;
-	case "CB":
-		query = 'Bluetooth';
-		break;
-	case "CT":
-		query = 'Tethering';
-		break;
-	case "MC":
-		query = 'Camera';
-		break;
-	case "MR":
-		query = 'VoiceRecord';
-		break;
+		case "CW":
+			query = 'Wifi';
+			break;
+		case "CB":
+			query = 'Bluetooth';
+			break;
+		case "CT":
+			query = 'Tethering';
+			break;
+		case "MC":
+			query = 'Camera';
+			break;
+		case "MR":
+			query = 'VoiceRecord';
+			break;
+		default:
+			query = type;
+			break;
 	}
 	
 	return callback(query);
