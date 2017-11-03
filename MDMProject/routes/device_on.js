@@ -21,10 +21,7 @@ var device_on = function(req, res){
 			}
 			if(result.Active === "off"){
 				func_push.device_active_push(database, paramId, "MC:OFF");
-//				func_push.device_active_push(database, paramId, "MR:OFF");
-				
 				device_dao.device_Management(connection, paramId, "Active", "on");
-//				device_dao.device_Management(connection, paramId, "VoiceRecord", "off");
 				device_dao.device_Management(connection, paramId, "Camera", "off");
 				
 				device_dao.setActive(connection, paramId, "출근", "사용자가 출근 하였습니다.", function(err) {

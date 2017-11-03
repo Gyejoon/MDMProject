@@ -5,7 +5,7 @@ const express = require('express')
   , logger = require('morgan')
   , cluster = require('cluster')
   , numCPUs = require('os').cpus().length
-  , date = require('date-utils')
+  , date = require('date-utils');
 cluster.schedulingPolicy = cluster.SCHED_RR;
 
 const config = require('./config/config');
@@ -15,6 +15,8 @@ const route_loader = require('./routes/route_loader');
 const bodyParser = require('body-parser');
 const expressSession = require('express-session');
 const expressErrorHandler = require('express-error-handler');
+
+const device_dao = require('./model/device_dao');
 
 //===== Express 서버 객체 만들기 =====//
 const app = express();
@@ -88,6 +90,7 @@ if(cluster.isMaster){
 	});
 	
 } else {
+
 	//시작된 서버 객체를 리턴받도록 합니다. 
 	const server = http.createServer(app).listen(app.get('port'), function(){
 		console.log('서버가 시작되었습니다. 포트 : ' + app.get('port') + ", " + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));

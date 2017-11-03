@@ -15,15 +15,14 @@ var option = {
 };
 
 var option2 = {
-	uri : 'http://192.168.0.31:8080/mdmservice/controller_onoff',
+	uri : 'http://192.168.0.15:8080/mdmservice/controller_onoff',
 	method : 'POST',
 	form : {
 		body : ""
 	}
 };
 
-
-request_web.deviceon = function(Id){
+request_web.deviceon = function(Id, emp, type, history){
 	request(option, function(err, res, body){
 		if (!err && res.statusCode === 200) {
 		    console.log("Success");
@@ -31,7 +30,7 @@ request_web.deviceon = function(Id){
 	});
 };
 
-request_web.deviceoff = function(Id){
+request_web.deviceoff = function(Id, emp, type, history){	
 	request(option, function(err, res, body){
 		
 	});

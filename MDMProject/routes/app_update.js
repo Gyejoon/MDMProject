@@ -10,6 +10,8 @@ var app_update = function(req, res){
 	var parampackage = req.body.data;
 	var paramapp = req.body.app;
 	
+	console.log("요청 디바이스 -> " + paramId);
+	
 	if(paramaction === "PACKAGE_REMOVED"){ // 삭제
 		database.getConnection(function(err, connection){
 			if(err){
@@ -23,7 +25,6 @@ var app_update = function(req, res){
 				app_dao.app_history(connection, paramId, "삭제", result.name);
 			});
 			app_dao.app_delete(connection, paramId, parampackage);
-
 		});
 	} else { // 추가 및 갱신 
 		database.getConnection(function(err, connection){
