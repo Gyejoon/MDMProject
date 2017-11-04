@@ -60,7 +60,7 @@ device_dao.getFcmtoken_emp = function(connection, employee_num, callback){
 };
 
 device_dao.getFcmtoken_Id = function(connection, Id, callback){
-	connection.query("select Fcm_token from device_info where Id = ?",[
+	connection.query("select Fcm_token, User_info_employee_num from device_info where Id = ?",[
 		Id
 	], function(err, regIds){
 		if(err){
@@ -93,6 +93,18 @@ device_dao.getActive = function(connection, Id, callback){
 	});
 };
 
+device_dao.getActiveId = function(connection, Rfid, callback){
+	connection.query("select Active, Device_info_Id from device_management " +
+			"INNER JOIN device_info ON Device_info_Id = Id where Rfid_key = ?",[
+		Rfid
+	],function(err, result){
+		if(err){
+			return callback(err);
+		}
+		return callback(null, result[0]);
+	});
+};
+
 device_dao.PushLog = function (connection, Id, type, history){
 	var query = "";
 	
@@ -115,6 +127,12 @@ device_dao.PushLog = function (connection, Id, type, history){
 		case "Backup":
 			query = "call control_history('" + Id + "'," + type + ", '" + history +"');" +
 					"call device_history('" + Id + "'," + type + ",'" + history +"');";
+			break;
+		case "출근":
+			query = "call control_history('" + Id + "', 'Camera', '" + history +"')";
+			break;
+		case "퇴근":
+			query = "call control_history('" + Id + "', 'Camera', '" + history +"')";
 			break;
 		default:
 			query = "call control_history('" + Id + "'," + type + ", '" + history +"');";

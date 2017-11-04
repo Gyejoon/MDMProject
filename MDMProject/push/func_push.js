@@ -151,7 +151,16 @@ func_push.device_active_push = function(database, Id, Data){
 
 		            return;
 				}
+				console.log(type[0]);
 				device_dao.PushLog(connection, Id, type[0], type[1]);
+				
+				if(type[1] === "off"){
+					request_web.deviceonoff(regIds[0].User_info_employee_num, "on");
+				}else{
+					request_web.deviceonoff(regIds[0].User_info_employee_num, "off");
+				}
+					
+					
 			});
 		});
 	});

@@ -15,24 +15,24 @@ var option = {
 };
 
 var option2 = {
-	uri : 'http://192.168.0.15:8080/mdmservice/controller_onoff',
+	uri : 'http://192.168.0.15:8080/mdmservice/device_onoff',
 	method : 'POST',
 	form : {
+		title : "title",
 		body : ""
 	}
 };
 
-request_web.deviceon = function(Id, emp, type, history){
-	request(option, function(err, res, body){
-		if (!err && res.statusCode === 200) {
-		    console.log("Success");
+request_web.deviceonoff = function(emp, body){
+	option2.form.body = emp + ":";	
+	option2.form.body += body;
+	
+	request(option2, function(err, res, body){
+		if(err){
+			console.log("웹서버와의 연결 실패");
+			return;
 		}
-	});
-};
-
-request_web.deviceoff = function(Id, emp, type, history){	
-	request(option, function(err, res, body){
-		
+		console.log("Success");
 	});
 };
 
