@@ -8,6 +8,8 @@ var device_manage = function(req, res){
 	const paramId = req.body.Id;
 	const paramflag = req.body.flag;
 	
+	console.log("요청 디바이스 -> " + paramId);
+	
 	database.getConnection(function(err, connection) {
 		if(err){
 			connection.release();
@@ -23,9 +25,7 @@ var device_manage = function(req, res){
 		});
 	});
 	
-	res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});
-	res.write(JSON.stringify("{code : '200', 'message' : '디바이스 관리 성공'}"));
-	res.end();
+	res.json({message : "디바이스 관리 성공"});
 };
 
 module.exports.device_manage = device_manage;

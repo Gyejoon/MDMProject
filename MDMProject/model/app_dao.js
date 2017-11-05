@@ -23,11 +23,12 @@ app_dao.app_search = function(connection, Id, packagename, callback){
 	});
 };
 
-app_dao.app_modulation = function(connection, Id, name, size){
+app_dao.app_modulation = function(connection, Id, name, size, version, signature, packagename){
 	return function(callback){
 		connection.query("select size from application_info where " +
-			"Device_info_Id = ? and size = ?",[
-				Id, size
+			"Device_info_Id = ? and size = ? and version = ? and packagename = ? " +
+			"and name = ? and signature = ?",[
+				Id, size, version, packagename, name, signature
 			], function(err, result){
 				if(err){
 					callback(err);

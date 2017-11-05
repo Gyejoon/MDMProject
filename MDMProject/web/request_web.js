@@ -23,41 +23,55 @@ var option2 = {
 	}
 };
 
-request_web.deviceonoff = function(emp, body){
-	option2.form.body = emp + ":";	
-	option2.form.body += body;
-	
-	request(option2, function(err, res, body){
-		if(err){
-			console.log("웹서버와의 연결 실패");
-			return;
-		}
-		console.log("Success");
-	});
+var option3 = {
+	uri : 'http://192.168.0.15:8080/mdmservice/controller_onoff',
+	method : 'POST',
+	form : {
+		body : ""
+	}	
 };
 
+// 사용자 웹서버에 실시간으로 위치 전송
 request_web.deviceloc = function(emp, lat, long){
 	option.json.employee_num = emp;
 	option.json.Latitude = lat;
 	option.json.Longitude = long;
 	
 	request(option, function(err, res, body) {
-		if (!err && res.statusCode === 200) {
-		    console.log(res.body);
+		if(err){
+			console.log("사용자 웹서버와의 연결 실패");
 		}
+		console.log("사용자 웹에 위치 정보 전송");
 	});
 };
 
-request_web.pushonoff = function(emp, type, history){
-	option2.form.body = emp + ":";
-	option2.form.body += type;
-	option2.form.body += ":";
-	option2.form.body += history;
+// 관리자 웹서버에 실시간으로 출퇴근 정보 전송
+request_web.deviceonoff = function(emp, body){
+	option2.form.body = emp + ":";	
+	option2.form.body += body;
 	
 	request(option2, function(err, res, body){
-		if(!err && res.statuscode === 200){
-			console.log(res.body);
+		if(err){
+			console.log("관리자 웹서버와의 연결 실패");
+			return;
 		}
+		console.log("관리자 웹에 출퇴근 정보 전송");
+	});
+};
+
+// 관리자 웹서버에 실시간으로 푸시 정보 전송
+request_web.pushonoff = function(emp, type, history){
+	option3.form.body = emp + ":";
+	option3.form.body += type;
+	option3.form.body += ":";
+	option3.form.body += history;
+	
+	request(option3, function(err, res, body){
+		if(err){
+			console.log("관리자 웹서버와의 연결 실패");
+			return;
+		}
+		console.log("관리자 웹에 푸시 정보 전송");
 	});
 };
 

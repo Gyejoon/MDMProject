@@ -6,7 +6,7 @@ var app_manage = {};
 
 var app_manage = function(req, res){
 	console.log('어플 관리 API 호출됨.' + new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
-	
+
 	var database = req.app.get('database');
 
 	var mod_array = [];	
@@ -16,6 +16,7 @@ var app_manage = function(req, res){
 	var paramhistory = req.body.history;
 	var paramapp = req.body.app;
 	
+	console.log("요청 디바이스 -> " + paramId);
 	
 	database.getConnection(function(err, connection){
 		if(err){
@@ -41,15 +42,14 @@ var app_manage = function(req, res){
 						});
 					}else{
 						mod_array.push(app_dao.app_modulation(connection, paramId, paramapp[x].name,
-								 paramapp[x].size));
+								 paramapp[x].size, paramapp[x].version, paramapp[x].signature,
+								 paramapp[x].packagename));
 					}
 				});
 			})(i);
 		}
 		connection.release();
 	});
-
-
 
 	setTimeout(function(){
 		async.series(mod_array, function(err, result){

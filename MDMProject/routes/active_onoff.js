@@ -1,13 +1,15 @@
 ﻿const device_dao = require('../model/device_dao');
 const func_push = require('../push/func_push');
 
-// 출근 버튼 클릭시
-var device_on = function(req, res){
-	console.log('디바이스 출근 모듈 호출됨.'+ new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
+// 디바이스 출퇴근 모듈
+var device_onoff = function(req, res){
+	console.log('디바이스 출퇴근 모듈 호출됨.'+ new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
 	var database = req.app.get('database');
 	
 	var paramId = req.body.Id;
+
+	console.log("요청 디바이스 -> " + paramId);
 	
 	database.getConnection(function(err, connection){
 		if(err){
@@ -20,7 +22,7 @@ var device_on = function(req, res){
 				throw err;
 			}
 			if(result.Active === "off"){
-				func_push.device_active_push(database, paramId, "MC:OFF");
+				func_push.device_active_push(database, paramId, "출근:OFF");
 				device_dao.device_Management(connection, paramId, "Active", "on");
 				device_dao.device_Management(connection, paramId, "Camera", "off");
 				
@@ -31,22 +33,35 @@ var device_on = function(req, res){
 					}
 					connection.release();
 				});
+			}else{
+				func_push.device_active_push(database, paramId, "퇴근:ON");
+				// 현황 갱신
+				device_dao.device_Management(connection, paramId, "Active", "off");
+				device_dao.device_Management(connection, paramId, "Camera", "on");
+				
+				device_dao.setActive(connection, paramId, "퇴근", "사용자가 퇴근 하였습니다.", function(err) {
+					if(err){
+						connection.release();
+						throw err;
+					}
+					connection.release();
+				});
 			}
 		});
 	});
 	
-	res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});
-	res.write(JSON.stringify("{code : '200', 'message' : '출근'}"));
-	res.end();
+	res.json({message : "디바이스 출퇴근"});
 	
 };
 
-var arduino_on = function(req, res){
+var arduino_onoff = function(req, res){
 	console.log('아두이노 출퇴근 모듈 호출됨.'+ new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
 	var database = req.app.get('database');
 	
 	var paramRfid = req.body.Rfid;
+	
+	console.log("요청 아두이노 -> " + paramRfid);
 	
 	database.getConnection(function(err, connection){
 		if(err){
@@ -88,10 +103,8 @@ var arduino_on = function(req, res){
 		});
 	});
 	
-	res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});
-	res.write(JSON.stringify("{code : '200', 'message' : '출퇴근'}"));
-	res.end();
+	res.json({message : "아두이노 출퇴근"});
 };
 
-module.exports.device_on = device_on;
-module.exports.arduino_on = arduino_on;
+module.exports.device_onoff = device_onoff;
+module.exports.arduino_onoff = arduino_onoff;

@@ -10,6 +10,8 @@ var device_location = function(req, res){
 	const paramLatitude = req.body.Latitude;
 	const paramLongitude = req.body.Longitude;
 	
+	console.log("요청 디바이스 -> " + paramId);
+	
 	database.getConnection(function(err, connection){
 		device_dao.locationadd(connection, paramId, paramLatitude, paramLongitude, function(err, result){
 			if(err){
@@ -28,11 +30,8 @@ var device_location = function(req, res){
 		});
 	});
 	
+	res.json({message : "위치 정보 추가 성공"});
 	
-	
-	res.writeHead('200', {'Content-Type' : 'application/json;charset=utf8'});
-	res.write(JSON.stringify("{code : '200', 'message' : '위치 정보 추가 성공'}"));
-	res.end();
 };
 
 module.exports.device_location = device_location;

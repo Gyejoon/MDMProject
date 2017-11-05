@@ -1,10 +1,11 @@
 var FCM = require('fcm-push');
 const config = require('../config/config');
 const device_dao = require('../model/device_dao');
-var request_web = require('../web/request_web');
-
+const request_web = require('../web/request_web');
 
 var func_push = {};
+
+const fcm = new FCM(config.fcm_api_key);
 
 func_push.device_push = function(database, emp, paramData){
 	
@@ -13,14 +14,6 @@ func_push.device_push = function(database, emp, paramData){
 			if(err){
 				throw err;
 			}
-			
-			console.log('전송 대상 단말 수 : ' + regIds.length);
-			if(regIds.length < 1){
-				console.log('푸시 전송 대상 없음 : ' + regIds.length);  
-	            throw err;
-			}
-
-			var fcm = new FCM(config.fcm_api_key);
 					
 			var type = paramData.split(":");
 			
@@ -51,7 +44,7 @@ func_push.device_push = function(database, emp, paramData){
 					management(type[0], function(resultType){
 						device_dao.PushLog(connection, resultId[0].Id, type[0], type[1]);
 						device_dao.device_Management(connection, resultId[0].Id, resultType, type[1].toLowerCase());
-						console.log("DB 현황 기록됨");
+						request_web.pushonoff(emp, type[0], type[1]);
 					});
 				});
 				
@@ -66,13 +59,6 @@ func_push.device_push_group = function(connection, emp, Data){
 		if(err){
 			throw err;
 		}
-		
-		if(regIds.length < 1){
-			console.log('푸시 전송 대상 없음 : ' + regIds.length); 
-            return;
-		}
-		
-		var fcm = new FCM(config.fcm_api_key);
 		
 		for(var i=0; i<Data.length; i++){
 			(function(x){
@@ -122,14 +108,6 @@ func_push.device_active_push = function(database, Id, Data){
 			if(err){
 				throw err;
 			}
-			
-			console.log('전송 대상 단말 수 : ' + regIds.length);
-			if(regIds.length < 1){
-				console.log('푸시 전송 대상 없음 : ' + regIds.length);
-	            throw err;
-			}
-
-			var fcm = new FCM(config.fcm_api_key);
 					
 			var type = Data.split(":");
 			
@@ -151,7 +129,6 @@ func_push.device_active_push = function(database, Id, Data){
 
 		            return;
 				}
-				console.log(type[0]);
 				device_dao.PushLog(connection, Id, type[0], type[1]);
 				
 				if(type[1] === "off"){
@@ -159,7 +136,6 @@ func_push.device_active_push = function(database, Id, Data){
 				}else{
 					request_web.deviceonoff(regIds[0].User_info_employee_num, "off");
 				}
-					
 					
 			});
 		});

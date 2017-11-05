@@ -14,8 +14,6 @@ var device_push = function(req, res) {
     
     push.device_push(database, req.query.emp, paramData);
     
-    request_web.pushonoff(req.query.emp, req.query.controller, req.query.onoff);
-    
     var success = {
     	check : "true"
     };

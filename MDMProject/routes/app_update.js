@@ -1,7 +1,7 @@
 const app_dao = require('../model/app_dao');
 
 var app_update = function(req, res){
-	console.log('어플 추가 갱신 및 삭제 API 호출됨.'+ new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
+	console.log('앱 추가 갱신 및 삭제 API 호출됨.'+ new Date().toFormat("YYYY-MM-DD HH24:MI:SS"));
 	
 	var database = req.app.get('database');
 	
@@ -58,7 +58,6 @@ var app_update = function(req, res){
 											paramapp[x].size, paramapp[x].version);
 								}
 							});
-
 						}
 					});
 				})(i);
