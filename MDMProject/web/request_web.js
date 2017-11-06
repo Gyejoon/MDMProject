@@ -2,12 +2,12 @@ var request = require('request');
 var request_web = {};
 
 var option = {
-	uri : 'http://www.terrier.co19.kr/send/location',
+	uri : 'http://192.168.0.8:8181/send/location',
 	method : 'POST',
 	headers : {
-		'Content-Type' : 'application/json'
+		'Content-Type' : 'x-www-form-urlencoded'
 	},
-	json : {
+	form : {
 		employee_num : "",
 		Latitude : "",
 		Longitude : ""
@@ -33,15 +33,15 @@ var option3 = {
 
 // 사용자 웹서버에 실시간으로 위치 전송
 request_web.deviceloc = function(emp, lat, long){
-	option.json.employee_num = emp;
-	option.json.Latitude = lat;
-	option.json.Longitude = long;
+	option.form.employee_num = emp;
+	option.form.Latitude = lat;
+	option.form.Longitude = long;
 	
 	request(option, function(err, res, body) {
 		if(err){
 			console.log("사용자 웹서버와의 연결 실패");
 		}
-		console.log("사용자 웹에 위치 정보 전송");
+		console.log(body);
 	});
 };
 
