@@ -14,7 +14,7 @@ func_push.device_push = function(database, emp, paramData){
 			if(err){
 				throw err;
 			}
-					
+			
 			var type = paramData.split(":");
 			
 			var message = {

@@ -2,7 +2,7 @@ var request = require('request');
 var request_web = {};
 
 var option = {
-	uri : 'http://192.168.0.8:8181/send/location',
+	uri : 'http://www.terrier.co19.kr/send/location/web',
 	method : 'POST',
 	headers : {
 		'Content-Type' : 'x-www-form-urlencoded'
@@ -41,7 +41,7 @@ request_web.deviceloc = function(emp, lat, long){
 		if(err){
 			console.log("사용자 웹서버와의 연결 실패");
 		}
-		console.log(body);
+		console.log(res.body);
 	});
 };
 
