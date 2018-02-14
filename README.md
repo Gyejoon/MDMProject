@@ -10,14 +10,27 @@
 
 ## Features
 
-- Device Control
-  - single
-  - group
+- MDM(Mobile Device Management)
+  - Device Control
+    - single
+    - group
+
+  - Commute System
+    - Wifi Area
+    - Arduino RFID
   
-- Commute System
-  - Wifi Area
-  - Arduino RFID
+  - Logging
+    - Device Control Log
+    - Commute Log
+
+- MAM(Mobile Application Management)
+  - Application Modulation detect
+  - Application Monitoring
+    - Install
+    - Delete
+    - Update
+  - Application Listing
   
-- Logging
-  - Device Control Log
-  - Commute Log
+- SSL(Secure Socket Layer)
+  - HTTPS
+  
