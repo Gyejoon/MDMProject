@@ -11,8 +11,8 @@
 ## Features
 
 - Device Control
-  - group
   - single
+  - group
   
 - Commute System
   - Wifi Area
