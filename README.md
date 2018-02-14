@@ -11,11 +11,13 @@
 ## Features
 
 - Device Control
-  - single
   - group
+  - single
+  
 - Commute System
   - Wifi Area
   - Arduino RFID
+  
 - Logging
   - Device Control Log
   - Commute Log
